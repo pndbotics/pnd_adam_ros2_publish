@@ -1,5 +1,5 @@
 ### 启动adam_demo
-1. 启动adam_demo脚本时需要在root用户下，在`adam_demo/bin/`目录下执行
+1. 启动adam_demo脚本，在`adam_demo/bin/`目录下执行
     ```bash
     sudo su
     sh run.sh
