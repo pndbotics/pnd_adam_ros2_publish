@@ -1,0 +1,2 @@
+export ROS_LOCALHOST_ONLY=1
+ros2 run robot_state_subscriber robot_state_subscriber
