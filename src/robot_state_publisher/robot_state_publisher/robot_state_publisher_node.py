@@ -42,30 +42,30 @@ class JointStatePublisher(Node):
 
         # 手指范围[0 1000]，1000表示手指完全伸直，0表示手指完全弯曲
         hand_control_left = np.zeros(6, dtype=np.float64)
-        hand_control_left[0] = 0.0
-        hand_control_left[1] = 0.0
-        hand_control_left[2] = 0.0
-        hand_control_left[3] = 0.0
-        hand_control_left[4] = 0.0
-        hand_control_left[5] = 0.0
+        hand_control_left[0] = 500.0
+        hand_control_left[1] = 500.0
+        hand_control_left[2] = 500.0
+        hand_control_left[3] = 500.0
+        hand_control_left[4] = 1000.0
+        hand_control_left[5] = 1000.0
         hand_control_right = np.zeros(6, dtype=np.float64)
-        hand_control_right[0] = 0.0
-        hand_control_right[1] = 0.0
-        hand_control_right[2] = 0.0
-        hand_control_right[3] = 500*np.sin(2*np.pi*self.counter/100.0/3.0) + 500
-        hand_control_right[4] = 0.0
-        hand_control_right[5] = 0.0
+        hand_control_right[0] = 500.0
+        hand_control_right[1] = 500.0
+        hand_control_right[2] = 500.0
+        hand_control_right[3] = 500.0
+        hand_control_right[4] = 1000.0
+        hand_control_right[5] = 1000.0
         
         position_array[18:24] = hand_control_left
         position_array[24:30] = hand_control_right
 
         # 测试用，根据需要调整
-        position_array[0] = 0.2*np.sin(2*np.pi*self.counter/100.0/5.0) # 测试腰部
-        position_array[1] = 0.2*np.sin(2*np.pi*self.counter/100.0/6.0) # 测试腰部
-        position_array[2] = 0.2*np.sin(2*np.pi*self.counter/100.0/7.0) # 测试腰部
-        position_array[7] = 0.5*np.sin(2*np.pi*self.counter/100.0) # 测试左胳膊小臂
-        position_array[14] = 0.5*np.sin(2*np.pi*self.counter/100.0) # 测试右胳膊小臂
-        position_array[17] = 1.0 - (0.1*np.sin(2*np.pi*self.counter/100.0/5.0)+0.1) # 测试base高度
+        # position_array[0] = 0.2*np.sin(2*np.pi*self.counter/100.0/5.0) # 测试腰部
+        # position_array[1] = 0.2*np.sin(2*np.pi*self.counter/100.0/6.0) # 测试腰部
+        # position_array[2] = 0.2*np.sin(2*np.pi*self.counter/100.0/7.0) # 测试腰部
+        # position_array[7] = 0.5*np.sin(2*np.pi*self.counter/100.0) # 测试左胳膊小臂
+        # position_array[14] = 0.5*np.sin(2*np.pi*self.counter/100.0) # 测试右胳膊小臂
+        # position_array[17] = 1.0 - (0.05*np.sin(2*np.pi*self.counter/100.0/5.0)+0.05) # 测试base高度
         
         # 将numpy数组转换为list类型
         msg.position = position_array.tolist()
