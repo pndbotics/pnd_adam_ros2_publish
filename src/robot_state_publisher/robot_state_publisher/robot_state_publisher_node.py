@@ -21,14 +21,8 @@ class JointStatePublisher(Node):
             "dof_pos/wristRoll_Left", "dof_pos/shoulderPitch_Right", "dof_pos/shoulderRoll_Right",
             "dof_pos/shoulderYaw_Right", "dof_pos/elbow_Right", "dof_pos/wristYaw_Right",
             "dof_pos/wristPitch_Right", "dof_pos/wristRoll_Right", "root_pos/z",
-            "dof_pos/L_pinky_MCP_joint", "dof_pos/L_pinky_DIP_joint", "dof_pos/L_ring_MCP_joint",
-            "dof_pos/L_ring_DIP_joint", "dof_pos/L_middle_MCP_joint", "dof_pos/L_middle_DIP_joint",
-            "dof_pos/L_index_MCP_joint", "dof_pos/L_index_DIP_joint", "dof_pos/L_thumb_proximal",
-            "dof_pos/L_thumb_PIP_joint", "dof_pos/L_thumb_MCP_joint1", "dof_pos/R_pinky_MCP_joint",
-            "dof_pos/R_pinky_DIP_joint", "dof_pos/R_ring_MCP_joint", "dof_pos/R_ring_DIP_joint",
-            "dof_pos/R_middle_MCP_joint", "dof_pos/R_middle_DIP_joint", "dof_pos/R_index_MCP_joint",
-            "dof_pos/R_index_DIP_joint", "dof_pos/R_thumb_proximal", "dof_pos/R_thumb_PIP_joint",
-            "dof_pos/R_thumb_MCP_joint1"
+            "dof_pos/hand_pinky_Left", "dof_pos/hand_ring_Left", "dof_pos/hand_middle_Left", "dof_pos/hand_index_Left", "dof_pos/hand_thumb_1_Left", "dof_pos/hand_thumb_2_Left",
+            "dof_pos/hand_pinky_Right", "dof_pos/hand_ring_Right", "dof_pos/hand_middle_Right", "dof_pos/hand_index_Right", "dof_pos/hand_thumb_1_Right", "dof_pos/hand_thumb_2_Right"
         ]
 
     def timer_callback(self):
@@ -38,15 +32,15 @@ class JointStatePublisher(Node):
         
         # 初始化position数组
         position_array = np.zeros(len(self.joint_names), dtype=np.float64)
-        
+
         position_array[:3] = 0.0        # 腰部姿态  复合角范围建议从小到大尝试
-        position_array[17] = 1.0        # base高度 范围[0.6m 1.0m]，站立时为1.0m，调整为0.6m时会有下蹲动作
-        
+
         position_array[3:10] = 0.0      # 左臂关节 根据实际情况调整，单位为弧度
         position_array[10:17] = 0.0     # 右臂关节 根据实际情况调整，单位为弧度
-        
-        # 兼容动捕服数据，每只手有11个自由度，但是实际每只手有6个关节，赋值时按照下面所示的方式即可，不需要拆分11个自由度
-        # 手指范围[0 pi]，0.0表示手指完全伸直，pi表示手指完全弯曲
+
+        position_array[17] = 1.0        # base高度 范围[0.6m 1.0m]，站立时为1.0m，调整为0.6m时会有下蹲动作
+
+        # 手指范围[0 1000]，1000表示手指完全伸直，0表示手指完全弯曲
         hand_control_left = np.zeros(6, dtype=np.float64)
         hand_control_left[0] = 0.0
         hand_control_left[1] = 0.0
@@ -58,23 +52,12 @@ class JointStatePublisher(Node):
         hand_control_right[0] = 0.0
         hand_control_right[1] = 0.0
         hand_control_right[2] = 0.0
-        hand_control_right[3] = np.pi/4.0*np.sin(2*np.pi*self.counter/100.0/3.0) + np.pi/4.0
+        hand_control_right[3] = 500*np.sin(2*np.pi*self.counter/100.0/3.0) + 500
         hand_control_right[4] = 0.0
         hand_control_right[5] = 0.0
         
-        position_array[18:20] = [0.0, hand_control_left[0]]   # 左手小拇指
-        position_array[20:22] = [0.0, hand_control_left[1]]   # 左手无名指
-        position_array[22:24] = [0.0, hand_control_left[2]]   # 左手中指
-        position_array[24:26] = [0.0, hand_control_left[3]]   # 左手食指
-        position_array[26:28] = [0.0, hand_control_left[4]]   # 左手拇指1
-        position_array[28] = hand_control_left[5]             # 左手拇指2
-        
-        position_array[29:31] = [0.0, hand_control_right[0]]   # 右手小拇指
-        position_array[31:33] = [0.0, hand_control_right[1]]   # 右手无名指
-        position_array[33:35] = [0.0, hand_control_right[2]]   # 右手中指
-        position_array[35:37] = [0.0, hand_control_right[3]]   # 右手食指
-        position_array[37:39] = [0.0, hand_control_right[4]]   # 右手拇指1
-        position_array[39] = hand_control_right[5]             # 右手拇指2
+        position_array[18:24] = hand_control_left
+        position_array[24:30] = hand_control_right
 
         # 测试用，根据需要调整
         position_array[0] = 0.2*np.sin(2*np.pi*self.counter/100.0/5.0) # 测试腰部
