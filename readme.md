@@ -14,6 +14,8 @@
     sudo su
 2. 使用如下指令编译ros2包
 
+    编译包之前，确定机器人类型为SP或者SPPRO，在`src/robot_state_subscriber/robot_state_subscriber/robot_state_subscriber_node.py`中更改宏定义`ROBOT_TYPE`为`SP`或者`SPPRO`
+    
     ```bash
     source build.sh
 
